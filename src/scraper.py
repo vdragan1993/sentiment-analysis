@@ -1,39 +1,49 @@
 # coding=utf-8
 __author__ = 'Dragan Vidakovic'
 from bs4 import BeautifulSoup
+from src.model import Review
 
 
 def has_results(html):
     return "Nije dostupno!" not in html
 
 
-def get_data(html, review_url):
+def get_page_data(html, review_url):
     soup = BeautifulSoup(html, 'html.parser')
     # restaurant info
     restaurant = soup.findAll("a", attrs={"class": "btn btn-primary btn-large"})[0]
     restaurant_name = restaurant.get_text().strip()[9:]
     restaurant_link = restaurant['href']
 
+    ret_val = []
     reviews = soup.findAll("div", attrs={"itemprop": "review"})
     for review in reviews:
-        get_review_data(str(review), review_url, restaurant_name, restaurant_link)
+        ret_val.append(get_review_data(str(review), review_url, restaurant_name, restaurant_link))
+
+    return ret_val
 
 
 def get_review_data(review, review_url, restaurant_name, restaurant_link):
     soup = BeautifulSoup(review, 'html.parser')
+
     # extracting user info
     user = soup.findAll("a", attrs={"itemprop": "author"})[0]
-    print(user.get_text().strip())
-    print(user['href'])
+    username = user.get_text().strip()
+    user_url = user['href'].strip()
+
     # extracting review info
     review_title = soup.findAll("meta", attrs={"itemprop": "name"})[0]
-    print(review_title['content'])
+    title = review_title['content'].strip()
+
     date_published = soup.findAll("meta", attrs={"itemprop": "datePublished"})[0]
-    print(date_published['content'])
-    rating = soup.findAll("meta", attrs={"itemprop": "reviewRating"})[0]
-    print(rating['content'])
+    published = date_published['content'].strip()
+
+    rating_value = soup.findAll("meta", attrs={"itemprop": "reviewRating"})[0]
+    rating = rating_value['content'].strip()
+
     review_content = soup.findAll("span", attrs={"itemprop": "reviewBody"})[0]
-    print(review_content.get_text().strip())
+    content = review_content.get_text().strip()
+
     # other ratings
     food_quality = None
     food_choice = None
@@ -52,16 +62,7 @@ def get_review_data(review, review_url, restaurant_name, restaurant_link):
                 prices = rating_string[0]
             elif rating_description.startswith("Usluga"):
                 service = rating_string[0]
-    print(food_quality)
-    print(food_choice)
-    print(prices)
-    print(service)
-    print(review_url)
-    print(restaurant_link)
-    print(restaurant_name)
-    print()
 
-
-def get_rating_value(rating_string):
-    rating_int = int(rating_string.split("-")[1])
-    return rating_int / 10
+    ret_val = Review(username, user_url, title, published, rating, content, food_quality, food_choice, prices, service,
+                     review_url, restaurant_name, restaurant_link)
+    return ret_val
