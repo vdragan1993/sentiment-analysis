@@ -16,7 +16,7 @@ num_of_restaurants = 1001
 
 
 def get_url(city, number):
-    return "http://www.donesi.com/" + city + "/review.php?objectID=" + str(number)
+    return "http://www.donesi.com/" + city + "/lat/review.php?objectID=" + str(number)
 
 
 def get_file_name(folder, city, number, extension):
@@ -52,11 +52,13 @@ def get_restaurant_reviews(file, url):
             while browser.find_element_by_id("nav_next_page"):
                 print(browser.current_url)
                 # TODO: magic for scraping
+                scraper.get_data(browser.page_source, browser.current_url)
                 next_page = browser.find_element_by_id("nav_next_page")
                 next_page.click()
         # no next page
         except:
             # TODO: magic for scraping
+            scraper.get_data(browser.page_source, browser.current_url)
             print(browser.current_url)
 
     else:
