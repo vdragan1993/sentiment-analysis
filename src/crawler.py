@@ -2,6 +2,8 @@
 __author__ = 'Dragan Vidakovic'
 from src import scraper
 from selenium import webdriver
+from src import writer
+import time
 
 # browser driver
 driver_location = "D:/chromedriver.exe"
@@ -20,7 +22,7 @@ def get_url(city, number):
 
 
 def get_file_name(folder, city, number, extension):
-    return folder + "/" + city + "_" + str(number) + "." + extension
+    return "../data/" + folder + "/" + city + "_" + str(number) + "." + extension
 
 
 def get_restaurants_for_country(country, folder):
@@ -36,7 +38,7 @@ def get_restaurants_for_country(country, folder):
 def get_restaurants_for_city(city, folder):
     city_count = 0
     for i in range(1, num_of_restaurants):
-                file_name = get_file_name(folder, city, i, 'txt')
+                file_name = get_file_name(folder, city, i, 'xlsx')
                 restaurant_url = get_url(city, i)
                 restaurant_count = get_restaurant_reviews(file_name, restaurant_url)
                 print("\t" + restaurant_url + " reviews count: " + str(restaurant_count))
@@ -72,12 +74,13 @@ def get_restaurant_reviews(file, url):
             all_reviews = all_reviews + page_reviews
 
         print("Collected reviews for restaurant: " + url + " , now writing file: " + file)
-        # TODO: write all reviews
+        writer.write_reviews(file, all_reviews)
 
     else:
         print("Restaurant: " + url + " does not exist!")
 
     browser.quit()
+    time.sleep(1)
     return len(all_reviews)
 
 if __name__ == "__main__":
@@ -90,6 +93,6 @@ if __name__ == "__main__":
     print("Total CG reviews: " + str(cg_reviews))
     """
     # temp test
-    get_restaurant_reviews('a.txt', get_url('beograd', 100))
-    get_restaurant_reviews('b.txt', get_url('beograd', 1))
-    get_restaurant_reviews('c.txt', get_url('beograd', 200))
+    get_restaurant_reviews('../data/srb/beograd_100.xlsx', get_url('beograd', 100))
+    get_restaurant_reviews('../data/srb/beograd_1.xlsx', get_url('beograd', 1))
+    get_restaurant_reviews('../data/srb/beograd_200.xlsx', get_url('beograd', 200))
