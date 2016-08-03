@@ -9,9 +9,11 @@ import time
 driver_location = "D:/chromedriver.exe"
 
 # city list
-srb = ['beograd', 'novisad', 'nis', 'subotica', 'pancevo', 'zrenjanin', 'kragujevac', 'krusevac', 'kraljevo', 'cacak']
-bih = ['sarajevo', 'banjaluka', 'bijeljina', 'brcko', 'prijedor', 'zenica', 'tuzla', 'mostar']
-cg = ['podgorica', 'bar', 'budva', 'kotor', 'tivat', 'hercegnovi', 'niksic', 'bijelopolje']
+#srb = ['beograd', 'novisad', 'nis', 'subotica', 'pancevo', 'zrenjanin', 'kragujevac', 'krusevac', 'kraljevo', 'cacak']
+#bih = ['sarajevo', 'banjaluka', 'bijeljina', 'brcko', 'prijedor', 'zenica', 'tuzla', 'mostar']
+bih = ['sarajevo']
+#cg = ['podgorica', 'bar', 'budva', 'kotor', 'tivat', 'hercegnovi', 'niksic', 'bijelopolje']
+cg = ['podgorica']
 
 # max id of restaurant in each city
 num_of_restaurants = 1001
@@ -40,7 +42,13 @@ def get_restaurants_for_city(city, folder):
     for i in range(1, num_of_restaurants):
                 file_name = get_file_name(folder, city, i, 'xlsx')
                 restaurant_url = get_url(city, i)
-                restaurant_count = get_restaurant_reviews(file_name, restaurant_url)
+
+                restaurant_count = 0
+                try:
+                    restaurant_count = get_restaurant_reviews(file_name, restaurant_url)
+                except:
+                    pass
+
                 print("\t" + restaurant_url + " reviews count: " + str(restaurant_count))
                 city_count += restaurant_count
 
@@ -87,8 +95,10 @@ if __name__ == "__main__":
     """
     serbia_reviews = get_restaurants_for_country(srb, 'srb')
     print("Total Serbia reviews: " + str(serbia_reviews))
+
     bih_reviews = get_restaurants_for_country(bih, 'bih')
     print("Total BiH reviews: " + str(bih_reviews))
+    """
     cg_reviews = get_restaurants_for_country(cg, 'cg')
     print("Total CG reviews: " + str(cg_reviews))
     """
@@ -96,3 +106,4 @@ if __name__ == "__main__":
     get_restaurant_reviews('../data/srb/beograd_100.xlsx', get_url('beograd', 100))
     get_restaurant_reviews('../data/srb/beograd_1.xlsx', get_url('beograd', 1))
     get_restaurant_reviews('../data/srb/beograd_200.xlsx', get_url('beograd', 200))
+    """
