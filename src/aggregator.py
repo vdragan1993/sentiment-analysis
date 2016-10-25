@@ -59,17 +59,17 @@ def latin_replace(sentence):
     if sentence == '' or sentence is None:
         return ''
 
-    sentence = sentence.replace("Č", "Ch")
+    sentence = sentence.replace("Č", "C")
     sentence = sentence.replace("Ć", "C")
     sentence = sentence.replace("Đ", "Dj")
-    sentence = sentence.replace("Š", "Sh")
-    sentence = sentence.replace("Ž", "Zh")
+    sentence = sentence.replace("Š", "S")
+    sentence = sentence.replace("Ž", "Z")
 
-    sentence = sentence.replace("č", "ch")
+    sentence = sentence.replace("č", "c")
     sentence = sentence.replace("ć", "c")
     sentence = sentence.replace("đ", "dj")
-    sentence = sentence.replace("š", "sh")
-    sentence = sentence.replace("ž", "zh")
+    sentence = sentence.replace("š", "s")
+    sentence = sentence.replace("ž", "z")
 
     return sentence
 
